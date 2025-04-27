@@ -57,7 +57,7 @@ This project contains all my local DevOps practice setups, including Jenkins, Lo
 ### 2. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/devops-lab.git
+git clone https://github.com/bagisetti/devops-lab.git
 cd devops-lab
 ```
 
