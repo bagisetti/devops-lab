@@ -16,8 +16,8 @@ services:
     container_name: jenkins-agent1
     environment:
       - JENKINS_URL=http://jenkins:8080
-      - JENKINS_AGENT_NAME=agent1
-      - JENKINS_SECRET=2a363f6482775750d0588db717dbabf0b147353778e618df09f89f1abc32f842
+      - JENKINS_AGENT_NAME=agent1-v2
+      - JENKINS_SECRET=${JENKINS_SECRET_AGENT1}
     depends_on:
       - jenkins
   
@@ -26,8 +26,8 @@ services:
     container_name: jenkins-agent2
     environment:
       - JENKINS_URL=http://jenkins:8080
-      - JENKINS_AGENT_NAME=agent2
-      - JENKINS_SECRET=38c94ba47d90364c500f00a264a065e2ed384af645eae65e79886346868913b2
+      - JENKINS_AGENT_NAME=agent2-v2
+      - JENKINS_SECRET=${JENKINS_SECRET_AGENT2}
     depends_on:
       - jenkins
     command: >
