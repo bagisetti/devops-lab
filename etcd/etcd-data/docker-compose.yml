@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  etcd:
+    image: gcr.io/etcd-development/etcd:v3.5.9
+    container_name: etcd-dev
+    ports:
+      - 2379:2379
+      - 2380:2380
+    volumes:
+      - etcd-volume:/etcd-data # named volume
+    environment:
+      - ETCD_DATA_DIR=/etcd-data
+      - ETCD_NAME=etcd-dev
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd-dev:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://etcd-dev:2380
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_INITIAL_CLUSTER=etcd-dev=http://etcd-dev:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+volumes:
+  etcd-volume:

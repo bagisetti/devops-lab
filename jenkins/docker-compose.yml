@@ -1,0 +1,43 @@
+services: 
+  jenkins:
+    build: .
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+      - ../projects:/projects
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+  
+  jenkins-agent1:
+    image: jenkins/inbound-agent:latest
+    container_name: jenkins-agent1
+    environment:
+      - JENKINS_URL=http://jenkins:8080
+      - JENKINS_AGENT_NAME=agent1
+      - JENKINS_SECRET=2a363f6482775750d0588db717dbabf0b147353778e618df09f89f1abc32f842
+    depends_on:
+      - jenkins
+  
+  jenkins-agent2:
+    build: ./agent-node-python
+    container_name: jenkins-agent2
+    environment:
+      - JENKINS_URL=http://jenkins:8080
+      - JENKINS_AGENT_NAME=agent2
+      - JENKINS_SECRET=38c94ba47d90364c500f00a264a065e2ed384af645eae65e79886346868913b2
+    depends_on:
+      - jenkins
+    command: >
+      sh -c "
+        echo 'Waiting for Jenkins to be ready...';
+        until curl --silent --head --fail $${JENKINS_URL}/login; do
+          echo 'Jenkins is not ready yet... sleeping 5 seconds';
+          sleep 5;
+        done;
+        echo 'Jenkins is up! Downloading agent.jar...';
+        curl -o agent.jar $${JENKINS_URL}/jnlpJars/agent.jar &&
+        java -jar agent.jar -jnlpUrl $${JENKINS_URL}/computer/$${JENKINS_AGENT_NAME}/slave-agent.jnlp -secret $${JENKINS_SECRET}
+      "

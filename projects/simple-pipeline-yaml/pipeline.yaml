@@ -1,0 +1,3 @@
+build: echo " Bulding the sample project..."
+test: echo " Running tests..."
+deploy: echo " Deploying the app to localstack s3..."

@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    stages {
+        stage("Build") {
+            steps {
+                script {
+                    def conf = readYaml file: '/projects/simple-pipeline-yaml/pipeline.yaml'
+                    sh "${conf.build}"
+                }
+            }
+        }
+
+        stage("Test") {
+            steps {
+                script {
+                    def conf = readYaml file: '/projects/simple-pipeline-yaml/pipeline.yaml'
+                    sh "${conf.test}"
+                }
+            }
+        }
+
+        stage("Deploy") {
+            steps {
+                script {
+                    def conf = readYaml file: '/projects/simple-pipeline-yaml/pipeline.yaml'
+                    sh "${conf.deploy}"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,45 @@
+pipeline {
+    agent any 
+
+    environment {
+        BUCKET_NAME = 'my-artifact-bucket'
+        FILE_NAME = 'artifact.zip'
+        AWS_ENDPOINT = "http://host.docker.internal:4566"
+        AWS_ACCESS_KEY_ID = "dummy"
+        AWS_SECRET_ACCESS_KEY = "dummy"
+    }
+
+    stages {
+
+        stage('Prepare Artifact') {
+            steps {
+                sh '''
+                    echo "Zipping aritifact files..."
+                    cd artifact
+                    zip -r ../${FILE_NAME} *
+                '''
+            }
+        }
+
+        stage ('Upload to S3') {
+            steps {
+                sh '''
+                    echo "Uploading ${FILE_NAME} to s3 bucket ${BUCKET_NAME}..."}
+                    awsls --endpoint-url ${AWS_ENDPOINT} S3 cp ${FILE_NAME} S3://${BUCKET_NAME}/${FILE_NAME}
+                    echo "Upload complete!"
+                '''
+            }
+        }
+
+        stage ('Cleanup') {
+            steps {
+                sh '''
+                    echo "Cleaning up..."
+                    rm -f ${FILE_NAME}
+                '''
+            }
+        }
+
+
+    }
+}

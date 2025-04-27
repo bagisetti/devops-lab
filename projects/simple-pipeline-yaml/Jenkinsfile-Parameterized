@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    parameters {
+        string (name: 'VERSION', defaultValue: '1.0.0', description: 'version of the application')
+        choice (name: 'ENVIRONMENT', choices: ['dev', 'qa', 'prod'], description: 'environment to deploy to')
+        booleanParam (name: 'ENABLE_DEBUG', defaultValue: false, description: 'enables debug logging')
+
+    }
+
+    stages {
+        
+        stage("Build") {
+            steps {
+                script {
+                    echo "Building version ${params.VERSION}"
+                    if(params.ENABLE_DEBUG) {
+                        echo "Debug logging is enabled"
+                    }
+                }
+            }
+            
+        }
+
+        stage ("Deploy") {
+            steps {
+                script {
+                    echo "Deploying to ${params.ENVIRONMENT} environment"
+                }
+            }
+        }
+    }
+    
+}
